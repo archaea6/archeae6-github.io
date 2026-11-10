@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ 机场三字代码 · 课堂挑战赛</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b1a2b 0%, #1d2f44 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            padding: 28px 30px 30px;
+            width: 100%;
+            max-width: 880px;
+            transition: all 0.2s;
+        }
+
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.7rem;
+            letter-spacing: 1px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .title span {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 6px #6ec8ff);
+        }
+
+        .scoreboard {
+            display: flex;
+            gap: 28px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 10px 22px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+            font-weight: 500;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            color: #cddcec;
+        }
+
+        .score-value {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: #fff;
+            line-height: 1;
+            background: linear-gradient(to bottom, #fff, #b0d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 120, 255, 0.4);
+        }
+
+        .timer-box {
+            background: #162b3c;
+            padding: 10px 22px;
+            border-radius: 40px;
+            border: 1px solid #3f6b8f;
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .timer-box .label {
+            font-size: 1rem;
+            color: #9ec6e0;
+        }
+
+        .timer-box .time {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #b3e2ff;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 12px #3aa8ff;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .player-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 10px 18px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .player-row label {
+            color: #aac8e0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .player-row input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #2e5778;
+            padding: 6px 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e6f3ff;
+            outline: none;
+            transition: border-color 0.15s;
+            min-width: 100px;
+        }
+
+        .player-row input:focus {
+            border-bottom-color: #4aa3ff;
+        }
+
+        .player-row input::placeholder {
+            color: #4e6b82;
+            font-weight: 400;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 12px;
+            margin: 18px 0 24px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 18px 22px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: rgba(10, 22, 33, 0.9);
+            border: 2px solid #2e5778;
+            border-radius: 60px;
+            color: #e6f3ff;
+            outline: none;
+            letter-spacing: 1px;
+            transition: all 0.15s;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(90, 170, 255, 0.1);
+        }
+
+        .input-wrapper input:focus {
+            border-color: #4aa3ff;
+            box-shadow: inset 0 4px 12px #000, 0 0 0 4px rgba(70, 160, 255, 0.3);
+            background: #0d1f2e;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #56738b;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-size: 1.1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1f7bc9, #0b4f8a);
+            border: none;
+            border-radius: 60px;
+            padding: 0 36px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #082a47, 0 10px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.08s ease;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #4499ee;
+        }
+
+        .submit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #082a47, 0 8px 16px black;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.4;
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #082a47;
+            pointer-events: none;
+            filter: grayscale(0.5);
+        }
+
+        .hint-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #b0cbe0;
+            font-size: 0.95rem;
+        }
+
+        .message {
+            min-height: 32px;
+            padding: 6px 0;
+            font-weight: 500;
+            transition: opacity 0.2s;
+            color: #ffd966;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .message.error {
+            color: #ff8a8a;
+        }
+
+        .message.success {
+            color: #8affb0;
+        }
+
+        .code-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px 18px;
+            border-radius: 28px;
+            min-height: 120px;
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 8px;
+            align-content: flex-start;
+        }
+
+        .code-badge {
+            background: #1e3c54;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #d0e9ff;
+            border: 1px solid #3c7aa6;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.5px;
+            transition: all 0.1s;
+            animation: pop 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .empty-message {
+            color: #55758b;
+            font-style: italic;
+            font-size: 1rem;
+            text-align: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            color: #8faec7;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .reset-btn, .upload-btn {
+            background: none;
+            border: 1px solid #3e6d94;
+            color: #b6d6f0;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            backdrop-filter: blur(4px);
+            font-size: 0.9rem;
+        }
+
+        .reset-btn:hover, .upload-btn:hover {
+            background: rgba(70, 150, 220, 0.2);
+            border-color: #6aa5d0;
+            color: white;
+        }
+
+        .upload-btn {
+            border-color: #2e7a5a;
+            color: #a0e0c0;
+        }
+
+        .upload-btn:hover {
+            border-color: #4aba8a;
+            background: rgba(60, 180, 120, 0.2);
+        }
+
+        /* 排行榜区域 */
+        .leaderboard-section {
+            margin-top: 24px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 28px;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .leaderboard-title {
+            color: #e0efff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .leaderboard-title .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4aff8b;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 10px #4aff8b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .clear-btn {
+            background: none;
+            border: 1px solid #4a6f8c;
+            color: #8faec7;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .clear-btn:hover {
+            background: rgba(200, 80, 80, 0.2);
+            border-color: #c05050;
+            color: #ffb0b0;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb {
+            background: #34658b;
+            border-radius: 10px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: rgba(20, 40, 58, 0.7);
+            border-radius: 40px;
+            border: 1px solid rgba(70, 130, 180, 0.2);
+            color: #d0e9ff;
+            font-size: 0.95rem;
+            transition: background 0.15s;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(30, 60, 90, 0.9);
+        }
+
+        .leaderboard-item.me {
+            border-color: #4aa3ff;
+            background: rgba(30, 80, 130, 0.8);
+            box-shadow: 0 0 8px rgba(70, 160, 255, 0.3);
+        }
+
+        .leaderboard-item.new-record {
+            animation: highlight 1s ease;
+        }
+
+        @keyframes highlight {
+            0% { background: rgba(70, 200, 130, 0.6); }
+            100% { background: rgba(20, 40, 58, 0.7); }
+        }
+
+        .rank-badge {
+            font-weight: 800;
+            font-size: 1rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #1e3c54;
+            color: #b0d4ff;
+            flex-shrink: 0;
+        }
+
+        .rank-badge.gold { background: #b8860b; color: #fff9e0; box-shadow: 0 0 12px #ffd70088; }
+        .rank-badge.silver { background: #6b7b8c; color: #f0f5ff; box-shadow: 0 0 8px #c0c0c0aa; }
+        .rank-badge.bronze { background: #8b5a2b; color: #ffefe0; box-shadow: 0 0 8px #cd7f32aa; }
+
+        .leaderboard-name {
+            flex: 1;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leaderboard-score {
+            font-weight: 800;
+            color: #8affb0;
+            font-size: 1.1rem;
+            margin-right: 4px;
+        }
+
+        .leaderboard-time {
+            font-size: 0.75rem;
+            color: #7a9bb5;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .leaderboard-date {
+            font-size: 0.7rem;
+            color: #7a9bb5;
+            white-space: nowrap;
+        }
+
+        .empty-leaderboard {
+            color: #55758b;
+            font-style: italic;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .player-count {
+            font-size: 0.8rem;
+            color: #8fb8d8;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        .data-source-info {
+            font-size: 0.8rem;
+            color: #7a9bb5;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        @media (max-width: 650px) {
+            .game-container { padding: 20px 16px; }
+            .title { font-size: 1.3rem; }
+            .scoreboard { gap: 12px; padding: 8px 14px; }
+            .score-value { font-size: 1.4rem; }
+            .timer-box { padding: 8px 16px; }
+            .timer-box .time { font-size: 1.5rem; min-width: 55px; }
+            .input-wrapper input { padding: 14px 18px; font-size: 1.1rem; }
+            .submit-btn { padding: 0 22px; font-size: 1rem; }
+            .input-section { gap: 8px; }
+            .player-row { flex-wrap: wrap; gap: 8px; }
+            .leaderboard-item { font-size: 0.85rem; gap: 8px; }
+            .rank-badge { width: 28px; height: 28px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <!-- 头部 -->
+    <div class="header">
+        <div class="title">
+            <span>✈️</span> 三字代码挑战 · 课堂赛
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <div class="scoreboard">
+                <div class="score-item">
+                    <span>已填</span>
+                    <span class="score-value" id="scoreDisplay">0</span>
+                </div>
+            </div>
+            <div class="timer-box">
+                <span class="label">⏳</span>
+                <span class="time" id="timerDisplay">90</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 玩家名字输入 -->
+    <div class="player-row">
+        <label for="playerName">🧑 玩家名字</label>
+        <input type="text" id="playerName" placeholder="输入你的名字（上榜用）" maxlength="20" autocomplete="off">
+    </div>
+
+    <!-- 输入区域 -->
+    <div class="input-section">
+        <div class="input-wrapper">
+            <input type="text" id="codeInput" placeholder="输入三字码 (如: PEK)" maxlength="3" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+        <button class="submit-btn" id="submitBtn">↵ 提交</button>
+    </div>
+
+    <!-- 提示消息 + 剩余数量 -->
+    <div class="hint-row">
+        <div class="message" id="messageArea">✨ 输入国内机场三字代码，按回车或点击提交</div>
+        <div style="color: #9bb9d4; font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 40px;">
+            剩余 <span id="remainingCount">233</span>
+        </div>
+    </div>
+
+    <!-- 已填代码展示区 -->
+    <div class="code-grid" id="codeGrid">
+        <div class="empty-message">还没有添加任何三字码</div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="reset-btn" id="resetBtn">⟲ 重新开始</button>
+            <label class="upload-btn" for="fileInput" style="display: inline-flex; align-items: center; gap: 6px; margin: 0;">
+                📂 上传数据源
+                <input type="file" id="fileInput" accept=".csv,.json,.txt" style="display: none;">
+            </label>
+            <button class="upload-btn" id="restoreDefaultBtn" style="border-color: #8a6d3b; color: #e0c080;">↺ 恢复默认</button>
+        </div>
+        <div style="opacity: 0.8;">⚡ 每填对一个得1分，数量优先，同分比时间</div>
+    </div>
+    <div class="data-source-info" id="dataSourceInfo">当前数据源：内置 233 个机场</div>
+
+    <!-- 排行榜区域 -->
+    <div class="leaderboard-section">
+        <div class="leaderboard-header">
+            <div class="leaderboard-title">
+                <span class="live-dot"></span>
+                🏆 玩家实时排行
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span class="player-count" id="playerCount">0 位玩家</span>
+                <button class="clear-btn" id="clearLeaderboardBtn">清空排行</button>
+            </div>
+        </div>
+        <div class="leaderboard-list" id="leaderboardList">
+            <div class="empty-leaderboard">暂无记录，完成一局后自动保存</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- 默认机场数据（内置，230+个） ----------
+    const DEFAULT_AIRPORT_MAP = {
+        "MFM": "澳门", "DQA": "大庆", "FYJ": "抚远", "HEK": "黑河", "HRB": "哈尔滨",
+        "HSF": "绥芬河", "JGD": "大兴安岭", "JMU": "佳木斯", "JSJ": "建三江", "JXA": "鸡西",
+        "LDS": "伊春", "MDG": "牡丹江", "NDG": "齐齐哈尔", "OHE": "漠河", "XXT": "嫩江",
+        "XXY": "依兰", "CGQ": "长春", "DBC": "白城", "JIL": "吉林", "NBS": "白山",
+        "TNH": "通化", "XXI": "长春二道河子", "XXN": "敦化", "YNJ": "延吉", "YSQ": "松原",
+        "AOG": "鞍山", "CHG": "朝阳", "CNI": "长海", "DDG": "丹东", "DLC": "大连",
+        "JNZ": "锦州", "SHE": "沈阳", "YKH": "营口", "NAY": "南苑", "PEK": "北京首都",
+        "PKX": "北京大兴", "BPE": "北戴河", "HDG": "邯郸", "SHP": "秦皇岛", "SJW": "石家庄",
+        "TVS": "唐山", "ZQZ": "张家口", "AXF": "阿拉善左", "BAV": "包头", "CIF": "赤峰",
+        "DSN": "鄂尔多斯", "EJN": "额济纳旗", "ERL": "二连浩特", "HET": "呼和浩特", "HLD": "海拉尔",
+        "HLH": "乌兰浩特", "HUO": "霍林河", "NZH": "满洲里", "NZL": "扎兰屯", "RHT": "阿拉善右",
+        "RLK": "巴彦淖尔", "TGO": "通辽", "UCB": "乌兰察布", "WUA": "乌海", "XIL": "锡林浩特",
+        "XXM": "根河", "YIE": "阿尔山", "CIH": "长治", "DAT": "大同", "LFQ": "临汾",
+        "LLV": "吕梁", "TYN": "太原", "WUT": "忻州", "XXA": "平朔", "YCU": "运城",
+        "TSN": "天津", "AQG": "安庆", "FUG": "阜阳", "HFE": "合肥", "JUH": "池州",
+        "TXN": "黄山", "WHA": "芜湖", "FOC": "福州", "JJN": "晋江", "LCX": "连城",
+        "SQJ": "三明", "WUS": "武夷山", "XMN": "厦门", "CZX": "常州", "HIA": "淮安",
+        "LYG": "连云港", "NKG": "南京", "NTG": "南通", "WUX": "无锡", "XUZ": "徐州",
+        "YNZ": "盐城", "YTY": "扬州", "JDZ": "景德镇", "JGS": "井冈山", "JIU": "九江",
+        "KHN": "南昌", "KOW": "赣州", "SQD": "三清山", "YIC": "宜春", "ZZZ": "南昌瑶湖",
+        "DOY": "东营", "JNG": "济宁", "LYI": "临沂", "RIZ": "日照", "TAO": "青岛",
+        "TNA": "济南", "WEF": "潍坊", "WEH": "威海", "YNT": "烟台", "NNN": "上海龙华",
+        "PVG": "上海浦东", "SHA": "上海虹桥", "HGH": "杭州", "HSN": "舟山", "HYN": "台州",
+        "JUZ": "衢州", "LIJ": "丽水", "NGB": "宁波", "WNZ": "温州", "YIW": "义乌",
+        "DNH": "敦煌", "GXH": "甘南", "IQN": "庆阳", "JGN": "嘉峪关", "JIC": "金昌",
+        "LHW": "兰州", "LNL": "陇南", "THQ": "天水", "YZY": "张掖", "ZGC": "兰州",
+        "GYU": "固原", "INC": "银川", "ZHY": "中卫", "GMQ": "果洛", "GOQ": "格尔木",
+        "HTT": "海西", "HXD": "海西", "XNN": "西宁", "YUS": "玉树", "AKA": "安康",
+        "ENY": "延安", "HZG": "汉中", "UYN": "榆林", "XIQ": "西安西关", "XIY": "西安",
+        "ACX": "兴义", "AVA": "安顺", "BFJ": "毕节", "HZH": "黎平", "KJH": "凯里",
+        "KWE": "贵阳", "LLB": "黔南", "LPF": "六盘水", "TEN": "铜仁", "WMT": "茅台",
+        "ZYI": "遵义", "AHJ": "阿坝红原", "BZX": "巴中", "CTU": "成都双流", "DAX": "达州旧",
+        "DCY": "稻城", "DZH": "达州", "GHN": "广汉", "GYS": "广元", "JZH": "九寨",
+        "KGT": "康定", "LZG": "阆中", "LZO": "泸州", "MIG": "绵阳", "NAO": "南充",
+        "PZI": "攀枝花", "TFU": "成都天府", "XIC": "西昌", "XXH": "遂宁", "XXK": "新津",
+        "YBP": "宜宾", "APJ": "阿里", "BPX": "邦达", "DDR": "日喀则", "LGZ": "山南",
+        "LXA": "拉萨", "LZY": "林芝", "NGQ": "阿里", "RKZ": "日喀则", "BSD": "保山",
+        "CWJ": "沧源", "DIG": "迪庆", "DLU": "大理", "JHG": "西双版纳", "KMG": "昆明",
+        "LJG": "丽江", "LNJ": "临沧", "LUM": "德宏", "NLH": "宁蒗", "SYM": "思茅",
+        "TCZ": "腾冲", "WNH": "文山", "ZAT": "昭通", "CKG": "重庆", "CQW": "仙女山",
+        "JIQ": "黔江", "WXN": "万县", "HKG": "香港", "AAT": "阿勒泰", "ACF": "阿拉尔",
+        "AKU": "阿克苏", "BPL": "博乐", "FYN": "富蕴", "HMI": "哈密", "HTN": "和田",
+        "IQM": "且末", "KCA": "库车", "KHG": "喀什", "KJI": "喀纳斯", "KRL": "库尔勒",
+        "KRY": "克拉玛依", "MLZ": "马兰", "NLT": "新源那拉提", "QSZ": "莎车", "RQA": "若羌",
+        "SHF": "石河子", "TCG": "塔城", "TLQ": "吐鲁番", "TWC": "图木舒克", "URC": "乌鲁木齐",
+        "YIN": "伊宁", "CAN": "广州", "HSC": "韶关", "HUZ": "惠州", "LDG": "罗定",
+        "MXZ": "梅县", "SWA": "汕头", "SZX": "深圳", "XXD": "珠海九州", "XXE": "阳江",
+        "ZHA": "湛江", "ZUH": "珠海", "AEB": "百色", "BHY": "北海", "HCJ": "河池",
+        "KWL": "桂林", "LZH": "柳州", "NNG": "南宁", "WUZ": "梧州", "BAR": "琼海博鳌",
+        "HAK": "海口", "SYX": "三亚", "CGO": "郑州", "LYA": "洛阳", "NNY": "南阳",
+        "EHU": "鄂州", "ENH": "恩施", "HPG": "神农架", "LHK": "老河口", "SHS": "沙市",
+        "WDS": "武当山", "WJD": "汉口", "WUH": "武汉", "XFN": "襄阳", "YIH": "宜昌",
+        "CGD": "常德", "CSX": "长沙", "DYG": "张家界", "HCZ": "郴州", "HHA": "长沙",
+        "HJJ": "怀化", "HNY": "衡阳", "LLF": "永州", "WGN": "邵阳"
+    };
+
+    // 当前使用的数据源
+    let AIRPORT_MAP = { ...DEFAULT_AIRPORT_MAP };
+    let VALID_CODES = new Set(Object.keys(AIRPORT_MAP));
+    let TOTAL_AIRPORTS = VALID_CODES.size;
+
+    // ---------- 游戏状态 ----------
+    let enteredCodes = [];
+    let timeLeft = 90;              // 90秒
+    let timerInterval = null;
+    let gameActive = false;
+    let gameEnded = false;
+    let startTime = 0;              // 本局开始时间戳（毫秒）
+    let usedTime = 0;               // 本局实际用时（秒），用于排名
+
+    // DOM 元素
+    const codeInput = document.getElementById('codeInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const messageArea = document.getElementById('messageArea');
+    const codeGrid = document.getElementById('codeGrid');
+    const remainingCountSpan = document.getElementById('remainingCount');
+    const playerNameInput = document.getElementById('playerName');
+    const leaderboardList = document.getElementById('leaderboardList');
+    const clearLeaderboardBtn = document.getElementById('clearLeaderboardBtn');
+    const playerCountSpan = document.getElementById('playerCount');
+    const fileInput = document.getElementById('fileInput');
+    const restoreDefaultBtn = document.getElementById('restoreDefaultBtn');
+    const dataSourceInfo = document.getElementById('dataSourceInfo');
+
+    // 初始化显示
+    timerDisplay.textContent = timeLeft;
+    remainingCountSpan.textContent = TOTAL_AIRPORTS;
+    dataSourceInfo.textContent = `当前数据源：内置 ${TOTAL_AIRPORTS} 个机场`;
+
+    // ---------- 排行榜存储 ----------
+    const STORAGE_KEY = 'airport_code_classroom_leaderboard';
+    let lastAddedName = null;
+
+    function loadLeaderboard() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) { return []; }
+    }
+
+    function saveLeaderboard(records) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        } catch (e) {}
+    }
+
+    // 添加成绩：每个玩家只保留最高分（分数高优先，同分用时短优先）
+    function addScoreToLeaderboard(name, score, usedSeconds) {
+        const records = loadLeaderboard();
+        const trimmedName = (name || '').trim() || '匿名玩家';
+        const now = new Date();
+        const dateStr = now.toLocaleString('zh-CN', {
+            month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+        });
+
+        const existingIndex = records.findIndex(r => r.name === trimmedName);
+        if (existingIndex !== -1) {
+            const existing = records[existingIndex];
+            // 更新条件：分数更高，或分数相同但用时更短
+            if (score > existing.score || (score === existing.score && usedSeconds < (existing.usedTime ?? Infinity))) {
+                records[existingIndex].score = score;
+                records[existingIndex].usedTime = usedSeconds;
+                records[existingIndex].date = dateStr;
+                records[existingIndex].updated = true;
+                lastAddedName = trimmedName;
+            }
+        } else {
+            records.push({
+                name: trimmedName,
+                score: score,
+                usedTime: usedSeconds,
+                date: dateStr,
+                updated: true
+            });
+            lastAddedName = trimmedName;
+        }
+
+        //
